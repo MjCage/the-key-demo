@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./utils/apollo-client";
+import { AuthProvider } from "./context/authContext";
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
 );
 root.render(
-	<ApolloProvider client={client}>
-		<App />
-	</ApolloProvider>
+	<AuthProvider>
+		<ApolloProvider client={client}>
+			<App />
+		</ApolloProvider>
+	</AuthProvider>
 );
