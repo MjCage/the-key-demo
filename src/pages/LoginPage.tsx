@@ -3,7 +3,7 @@ import { LoginForm } from "../components/LoginForm";
 
 const LoginPage = () => {
 	return (
-		<div className="flex w-full h-screen flex-col justify-center items-center px-3 pt-12 sm:pt-6 pb-36 bg-gray-200">
+		<div className="flex w-full h-screen flex-col justify-center items-center px-3 pt-12 sm:pt-6 pb-36">
 			<img
 				className="mx-auto h-16 w-auto"
 				src="/key-logo.png"

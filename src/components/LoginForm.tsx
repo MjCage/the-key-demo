@@ -3,6 +3,9 @@ import { Button } from "./Button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
+import { useAuth } from "../context/authContext";
+import { useMutation } from "@apollo/react-hooks";
+import { LOGIN_USER } from "../utils/mutations";
 
 type Inputs = {
 	email: string;
@@ -21,6 +24,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({ className }: LoginFormProps) => {
+	const { login } = useAuth();
 	const {
 		register,
 		handleSubmit,
@@ -30,9 +34,29 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 		mode: "onTouched",
 	});
 
-	const onSubmit = () => {
-		// ToDo: Trigger login
-		console.log("Fired");
+	const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+		update(_, { data }) {
+			const accessToken =
+				data?.Auth?.loginJwt?.loginResult?.jwtTokens?.accessToken;
+
+			if (accessToken) {
+				login(accessToken);
+			}
+		},
+		onError(error) {
+			console.error(error);
+		},
+	});
+
+	const onSubmit = (inputs: Inputs) => {
+		loginUser({
+			variables: {
+				input: {
+					email: inputs.email,
+					password: inputs.password,
+				},
+			},
+		});
 	};
 
 	return (
@@ -67,7 +91,12 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 			<p className="text-red-500 text-xs mb-8 h-2">
 				{errors.password?.message}
 			</p>
-			<Button type="submit" label="Sign in" disabled={!isValid} />
+			<Button
+				type="submit"
+				label="Sign in"
+				disabled={!isValid}
+				isLoading={loading}
+			/>
 		</form>
 	);
 };
