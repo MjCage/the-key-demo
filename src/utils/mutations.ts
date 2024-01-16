@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-export const LOGIN_USER = gql`
+const LOGIN_USER = gql`
 	mutation LoginJwt($input: LoginJwtInput!) {
 		Auth {
 			loginJwt(input: $input) {
@@ -13,3 +13,19 @@ export const LOGIN_USER = gql`
 		}
 	}
 `;
+
+const GET_USER_INFO = gql`
+	query CurrentUser {
+		Viewer {
+			Auth {
+				currentUser {
+					user {
+						name
+					}
+				}
+			}
+		}
+	}
+`;
+
+export { LOGIN_USER, GET_USER_INFO };
