@@ -4227,17 +4227,6 @@ export type DeleteRewardPayload = {
   contentNode: TreeNode;
 };
 
-export type DeleteTagInput = {
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  ids: Array<Scalars['ID']['input']>;
-};
-
-export type DeleteTagPayload = {
-  __typename?: 'DeleteTagPayload';
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedIds: Array<Scalars['ID']['output']>;
-};
-
 export type DeleteUnpublishedChildNodePlusDescendantsInput = {
   childNodeId: Scalars['ID']['input'];
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
