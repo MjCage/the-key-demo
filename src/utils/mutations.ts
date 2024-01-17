@@ -28,4 +28,23 @@ const GET_USER_INFO = gql`
 	}
 `;
 
-export { LOGIN_USER, GET_USER_INFO };
+const GET_CONTENT_NODES = gql`
+	query GetContentNodes {
+		Admin {
+			Tree {
+				GetContentNodes {
+					edges {
+						node {
+							id
+							structureDefinition {
+								title
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+`;
+
+export { LOGIN_USER, GET_USER_INFO, GET_CONTENT_NODES };

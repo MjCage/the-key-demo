@@ -1,29 +1,74 @@
 import { useQuery } from "@apollo/client";
-import React from "react";
-import { GET_USER_INFO } from "../utils/mutations";
+import React, { useEffect, useState } from "react";
+import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/mutations";
 import { Navbar } from "../components/Navbar";
 import { SkeletonLoader } from "../components/SkeletonLoader";
 
+interface Edge {
+	node: {
+		id: string;
+		structureDefinition: {
+			title: string;
+		};
+	};
+}
+
+interface Node {
+	id: string;
+	title: string;
+}
+
 const Dashboard = () => {
-	const { data, loading } = useQuery(GET_USER_INFO);
+	const { data: userData, loading: loadingUser } = useQuery(GET_USER_INFO);
+	const { data: nodeData } = useQuery(GET_CONTENT_NODES);
+
+	const [nodes, setNodes] = useState<Node[]>();
+
+	useEffect(() => {
+		const edges = nodeData?.Admin?.Tree?.GetContentNodes?.edges;
+		if (edges) {
+			setNodes(
+				edges.map((edge: Edge) => ({
+					id: edge.node.id,
+					title: edge.node.structureDefinition.title,
+				}))
+			);
+		} else {
+			setNodes(undefined);
+		}
+	}, [nodeData]);
 
 	// ToDo: Define error case
 
 	return (
-		<div className="w-full h-screen">
+		<div className="w-full h-screen overflow-hidden">
 			<Navbar />
-			<div className="flex flex-col px-3 max-w-5xl mx-auto">
-				<h1 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 md:text-left">
+			<div className="h-full flex flex-col py-10 lg:pb-20 px-3 max-w-5xl mx-auto">
+				<h1 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 md:text-left">
 					Welcome{" "}
 					<SkeletonLoader
-						isLoading={loading}
+						isLoading={loadingUser}
 						className="h-[26px] w-40 inline-block"
 					>
 						<span className="font-thin">
-							{data?.Viewer?.Auth?.currentUser?.user?.name ?? "User"}!
+							{userData?.Viewer?.Auth?.currentUser?.user?.name ?? "User"}!
 						</span>
 					</SkeletonLoader>
 				</h1>
+				<div className="flex-grow my-10 overflow-y-auto space-y-2">
+					{nodes
+						? nodes.map((node) => (
+								<div
+									className="w-full h-20 p-3 flex flex-col justify-center bg-gray-300 rounded"
+									key={node.id}
+								>
+									{node.title}
+								</div>
+							))
+						: [0, 1, 2, 3, 5].map((i) => (
+								<SkeletonLoader className="w-full h-20" key={i} isLoading />
+							))}
+				</div>
 			</div>
 		</div>
 	);
