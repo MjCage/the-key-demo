@@ -94,6 +94,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 			<Button
 				type="submit"
 				label="Sign in"
+				className="w-full"
 				disabled={!isValid}
 				isLoading={loading}
 			/>
