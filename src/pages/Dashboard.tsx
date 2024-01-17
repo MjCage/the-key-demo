@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/mutations";
+import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/schemas";
 import { Navbar } from "../components/Navbar";
 import { SkeletonLoader } from "../components/SkeletonLoader";
 

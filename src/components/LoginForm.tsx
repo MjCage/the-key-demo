@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 import { useAuth } from "../context/authContext";
 import { useMutation } from "@apollo/react-hooks";
-import { LOGIN_USER } from "../utils/mutations";
+import { LOGIN_USER } from "../utils/schemas";
 
 type Inputs = {
 	email: string;
