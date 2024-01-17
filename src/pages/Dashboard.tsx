@@ -4,15 +4,6 @@ import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/schemas";
 import { Navbar } from "../components/Navbar";
 import { SkeletonLoader } from "../components/SkeletonLoader";
 
-interface Edge {
-	node: {
-		id: string;
-		structureDefinition: {
-			title: string;
-		};
-	};
-}
-
 interface Node {
 	id: string;
 	title: string;
@@ -25,13 +16,19 @@ const Dashboard = () => {
 	const [nodes, setNodes] = useState<Node[]>();
 
 	useEffect(() => {
-		const edges = nodeData?.Admin?.Tree?.GetContentNodes?.edges;
+		const edges = nodeData?.Admin.Tree.GetContentNodes.edges;
 		if (edges) {
 			setNodes(
-				edges.map((edge: Edge) => ({
-					id: edge.node.id,
-					title: edge.node.structureDefinition.title,
-				}))
+				edges.flatMap((edge) =>
+					edge
+						? [
+								{
+									id: edge.node.id,
+									title: edge.node.structureDefinition.title,
+								},
+							]
+						: []
+				)
 			);
 		} else {
 			setNodes(undefined);

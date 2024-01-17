@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 import { useAuth } from "../context/authContext";
-import { useMutation } from "@apollo/react-hooks";
 import { LOGIN_USER } from "../utils/schemas";
+import { useMutation } from "@apollo/client";
 
 type Inputs = {
 	email: string;
@@ -37,7 +37,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 	const [loginUser, { loading }] = useMutation(LOGIN_USER, {
 		update(_, { data }) {
 			const accessToken =
-				data?.Auth?.loginJwt?.loginResult?.jwtTokens?.accessToken;
+				data?.Auth.loginJwt?.loginResult.jwtTokens.accessToken;
 
 			if (accessToken) {
 				login(accessToken);

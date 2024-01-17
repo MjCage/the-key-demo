@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql } from "../__generated__";
 
-const LOGIN_USER = gql`
+const LOGIN_USER = gql(/* GraphQL */ `
 	mutation LoginJwt($input: LoginJwtInput!) {
 		Auth {
 			loginJwt(input: $input) {
@@ -12,9 +12,9 @@ const LOGIN_USER = gql`
 			}
 		}
 	}
-`;
+`);
 
-const GET_USER_INFO = gql`
+const GET_USER_INFO = gql(/* GraphQL */ `
 	query CurrentUser {
 		Viewer {
 			Auth {
@@ -26,9 +26,9 @@ const GET_USER_INFO = gql`
 			}
 		}
 	}
-`;
+`);
 
-const GET_CONTENT_NODES = gql`
+const GET_CONTENT_NODES = gql(/* GraphQL */ `
 	query GetContentNodes {
 		Admin {
 			Tree {
@@ -45,6 +45,6 @@ const GET_CONTENT_NODES = gql`
 			}
 		}
 	}
-`;
+`);
 
 export { LOGIN_USER, GET_USER_INFO, GET_CONTENT_NODES };

@@ -1,0 +1,26 @@
+# Dependency directories
+node_modules
+build
+
+# Version control directories
+.git
+
+# Generated files
+src/__generated__
+
+# Various config files
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build directories
+/public
+/dist
+
+# Cache directories
+.cache
