@@ -2,7 +2,7 @@ import React from "react";
 
 interface SkeletonLoaderProps {
 	isLoading: boolean;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 	className?: string;
 }
 
@@ -13,9 +13,7 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
 }) => {
 	if (isLoading) {
 		return (
-			<div
-				className={`bg-gray-300 rounded animate-pulse ${className ?? ""}`}
-			></div>
+			<div className={`bg-gray-300 rounded animate-pulse ${className ?? ""}`} />
 		);
 	}
 
