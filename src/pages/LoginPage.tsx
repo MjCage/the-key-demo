@@ -10,7 +10,7 @@ const LoginPage = () => {
 				alt="The logo of the key technology"
 			/>
 			<h1 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-				Sign in to your account
+				Logge dich ein
 			</h1>
 			<LoginForm className="max-w-sm mt-10" />
 		</div>

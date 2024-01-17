@@ -68,7 +68,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 				htmlFor="email"
 				className="block mb-2 text-sm font-medium leading-6 text-gray-900"
 			>
-				Email address
+				E-Mail Adresse
 			</label>
 			<input
 				autoComplete="email"
@@ -80,7 +80,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 				htmlFor="password"
 				className="block mb-2 mt-6 text-sm font-medium leading-6 text-gray-900"
 			>
-				Password
+				Passwort
 			</label>
 			<input
 				type="password"
@@ -93,7 +93,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 			</p>
 			<Button
 				type="submit"
-				label="Sign in"
+				label="Einloggen"
 				className="w-full"
 				disabled={!isValid}
 				isLoading={loading}

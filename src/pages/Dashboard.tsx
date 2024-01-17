@@ -42,7 +42,7 @@ const Dashboard = () => {
 			<Navbar />
 			<div className="h-full flex flex-col py-10 lg:pb-20 px-3 max-w-5xl mx-auto">
 				<h1 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 md:text-left">
-					Welcome{" "}
+					Willkommen{" "}
 					<SkeletonLoader
 						isLoading={loadingUser}
 						className="h-[26px] w-40 inline-block"

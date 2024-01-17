@@ -13,7 +13,7 @@ export const Navbar = () => {
 					src="/key-logo.png"
 					alt="The logo of key technology"
 				/>
-				<Button label="Logout" className="w-fit" onClick={logout} />
+				<Button label="Ausloggen" className="w-fit" onClick={logout} />
 			</div>
 		</nav>
 	);
