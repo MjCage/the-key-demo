@@ -56,6 +56,11 @@ const Dashboard = () => {
 					</SkeletonLoader>
 				</h1>
 				<div className="flex-grow my-10 overflow-y-auto space-y-2">
+					{nodes?.length === 0 && (
+						<div className="w-full text-center text-sm">
+							There are no Nodes available!
+						</div>
+					)}
 					{nodes
 						? nodes.map((node) => (
 								<div
