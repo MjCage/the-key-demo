@@ -15,7 +15,7 @@ import { REORDER_ACTIONS } from "../utils/contants";
 
 interface Action {
 	movedItemId: string;
-	inFrontOfItemId: string | null;
+	newIndex: number;
 }
 
 const reorder = (
@@ -43,38 +43,23 @@ const Dashboard = () => {
 	const [nodes, setNodes] = useState<Node[]>();
 	const [reorderActions, setReorderActions] = useState<Action[]>([]);
 
-	const updateActions = (actions: Action[], newAction: Action) => {
-		const updated = actions.map((action) => {
-			if (action.movedItemId === newAction.movedItemId) {
-				return newAction;
-			} else if (action.inFrontOfItemId === newAction.movedItemId) {
-				return { ...action, inFrontOfItemId: newAction.inFrontOfItemId };
-			}
-			return action;
-		});
-
-		updated.push(newAction);
-
-		return updated;
-	};
-
 	const applyReorderActions = (nodes: Node[], actions: Action[]) => {
 		const reorderedNodes = [...nodes];
 
 		actions.forEach((action) => {
-			const { movedItemId, inFrontOfItemId } = action;
+			const { movedItemId, newIndex } = action;
 
 			const movedItemIndex = reorderedNodes.findIndex(
 				(node) => node.id === movedItemId
 			);
-			const inFrontOfItemIndex = inFrontOfItemId
-				? reorderedNodes.findIndex((node) => node.id === inFrontOfItemId)
-				: reorderedNodes.length;
 
-			if (movedItemIndex !== -1 && inFrontOfItemIndex !== -1) {
-				const [movedItem] = reorderedNodes.splice(movedItemIndex, 1);
-				reorderedNodes.splice(inFrontOfItemIndex, 0, movedItem);
+			if (movedItemIndex === -1) {
+				return;
 			}
+
+			const [movedItem] = reorderedNodes.splice(movedItemIndex, 1);
+
+			reorderedNodes.splice(newIndex, 0, movedItem);
 		});
 
 		return reorderedNodes;
@@ -96,18 +81,15 @@ const Dashboard = () => {
 		);
 		setNodes(newNodes);
 
-		const movedItemId = newNodes[result.destination.index].id;
-		const nextItemId =
-			result.destination.index < newNodes.length - 1
-				? newNodes[result.destination.index + 1].id
-				: null;
+		const newIndex = result.destination.index;
+		const movedItemId = newNodes[newIndex].id;
 
 		const newAction = {
 			movedItemId,
-			inFrontOfItemId: nextItemId,
+			newIndex,
 		};
 
-		const updatedActions = updateActions(reorderActions, newAction);
+		const updatedActions = [...reorderActions, newAction];
 		setReorderActions(updatedActions);
 		localStorage.setItem(REORDER_ACTIONS, JSON.stringify(updatedActions));
 	};
