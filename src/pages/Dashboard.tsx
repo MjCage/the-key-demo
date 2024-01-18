@@ -37,7 +37,12 @@ const Dashboard = () => {
 	const [nodes, setNodes] = useState<Node[]>();
 
 	const onDragEnd = (result: DropResult) => {
-		if (!result.destination || !nodes) return;
+		if (
+			!result.destination ||
+			!nodes ||
+			result.source.index === result.destination.index
+		)
+			return;
 
 		setNodes(reorder(nodes, result.source.index, result.destination.index));
 	};
