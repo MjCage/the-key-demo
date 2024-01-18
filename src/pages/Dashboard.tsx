@@ -11,6 +11,12 @@ import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { NodeRow } from "../components/NodeRow";
 import { NodeItem } from "../components/NodeItem";
 import { Node } from "../utils/types";
+import { REORDER_ACTIONS } from "../utils/contants";
+
+interface Action {
+	movedItemId: string;
+	inFrontOfItemId: string | null;
+}
 
 const reorder = (
 	list: Node[],
@@ -35,33 +41,99 @@ const Dashboard = () => {
 	const { data: nodeData, error } = useQuery(GET_CONTENT_NODES);
 
 	const [nodes, setNodes] = useState<Node[]>();
+	const [reorderActions, setReorderActions] = useState<Action[]>([]);
+
+	const updateActions = (actions: Action[], newAction: Action) => {
+		const updated = actions.map((action) => {
+			if (action.movedItemId === newAction.movedItemId) {
+				return newAction;
+			} else if (action.inFrontOfItemId === newAction.movedItemId) {
+				return { ...action, inFrontOfItemId: newAction.inFrontOfItemId };
+			}
+			return action;
+		});
+
+		updated.push(newAction);
+
+		return updated;
+	};
+
+	const applyReorderActions = (nodes: Node[], actions: Action[]) => {
+		const reorderedNodes = [...nodes];
+
+		actions.forEach((action) => {
+			const { movedItemId, inFrontOfItemId } = action;
+
+			const movedItemIndex = reorderedNodes.findIndex(
+				(node) => node.id === movedItemId
+			);
+			const inFrontOfItemIndex = inFrontOfItemId
+				? reorderedNodes.findIndex((node) => node.id === inFrontOfItemId)
+				: reorderedNodes.length;
+
+			if (movedItemIndex !== -1 && inFrontOfItemIndex !== -1) {
+				const [movedItem] = reorderedNodes.splice(movedItemIndex, 1);
+				reorderedNodes.splice(inFrontOfItemIndex, 0, movedItem);
+			}
+		});
+
+		return reorderedNodes;
+	};
 
 	const onDragEnd = (result: DropResult) => {
 		if (
 			!result.destination ||
 			!nodes ||
 			result.source.index === result.destination.index
-		)
+		) {
 			return;
+		}
 
-		setNodes(reorder(nodes, result.source.index, result.destination.index));
+		const newNodes = reorder(
+			nodes,
+			result.source.index,
+			result.destination.index
+		);
+		setNodes(newNodes);
+
+		const movedItemId = newNodes[result.destination.index].id;
+		const nextItemId =
+			result.destination.index < newNodes.length - 1
+				? newNodes[result.destination.index + 1].id
+				: null;
+
+		const newAction = {
+			movedItemId,
+			inFrontOfItemId: nextItemId,
+		};
+
+		const updatedActions = updateActions(reorderActions, newAction);
+		setReorderActions(updatedActions);
+		localStorage.setItem(REORDER_ACTIONS, JSON.stringify(updatedActions));
 	};
 
 	useEffect(() => {
 		const edges = nodeData?.Admin.Tree.GetContentNodes.edges;
 		if (edges) {
-			setNodes(
-				edges.flatMap((edge) =>
-					edge
-						? [
-								{
-									id: edge.node.id,
-									title: edge.node.structureDefinition.title,
-								},
-							]
-						: []
-				)
+			let newNodes = edges.flatMap((edge) =>
+				edge
+					? [
+							{
+								id: edge.node.id,
+								title: edge.node.structureDefinition.title,
+							},
+						]
+					: []
 			);
+
+			const storedActions = localStorage.getItem(REORDER_ACTIONS);
+			if (storedActions) {
+				const actions = JSON.parse(storedActions);
+				setReorderActions(actions);
+				newNodes = applyReorderActions(newNodes, actions);
+			}
+
+			setNodes(newNodes);
 		} else {
 			setNodes(undefined);
 		}
