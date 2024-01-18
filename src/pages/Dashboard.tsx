@@ -34,7 +34,10 @@ const rowRenderer = (
 	items: Node[],
 	index: number,
 	style: React.CSSProperties
-) => <NodeRow items={items} index={index} style={style} />;
+) =>
+	items[index] ? (
+		<NodeRow items={items} index={index} style={style} key={items[index].id} />
+	) : null;
 
 const Dashboard = () => {
 	const { data: userData, loading: loadingUser } = useQuery(GET_USER_INFO);

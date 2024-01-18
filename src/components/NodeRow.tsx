@@ -21,7 +21,7 @@ export const NodeRow = ({ items, index, style }: NodeRowProps) => {
 	};
 
 	return (
-		<Draggable key={item.id} draggableId={item.id} index={index}>
+		<Draggable draggableId={item.id} index={index}>
 			{(provided, snapshot) => (
 				<NodeItem
 					index={index}
