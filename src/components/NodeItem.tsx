@@ -23,7 +23,7 @@ const NodeItemComponent = memo(
 				...style,
 				...provided.draggableProps.style,
 			}}
-			className={`flex items-center justify-between rounded px-4 mb-4 ${isDragging ? "bg-indigo-200" : "bg-gray-300"}`}
+			className={`flex items-center justify-between rounded px-4 mb-2 ${isDragging ? "bg-indigo-200" : "bg-gray-300"}`}
 		>
 			{item.title}
 			<img src="/drag-icon.svg" />
