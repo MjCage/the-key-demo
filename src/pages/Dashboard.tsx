@@ -1,19 +1,46 @@
+/* eslint-disable react/no-find-dom-node */
+
 import { useQuery } from "@apollo/client";
+import ReactDOM from "react-dom";
 import React, { useEffect, useState } from "react";
 import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/schemas";
 import { Navbar } from "../components/Navbar";
 import { SkeletonLoader } from "../components/SkeletonLoader";
+import { AutoSizer, List } from "react-virtualized";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { NodeRow } from "../components/NodeRow";
+import { NodeItem } from "../components/NodeItem";
+import { Node } from "../utils/types";
 
-interface Node {
-	id: string;
-	title: string;
-}
+const reorder = (
+	list: Node[],
+	startIndex: number,
+	endIndex: number
+): Node[] => {
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
+
+	return result;
+};
+
+const rowRenderer = (
+	items: Node[],
+	index: number,
+	style: React.CSSProperties
+) => <NodeRow items={items} index={index} style={style} />;
 
 const Dashboard = () => {
 	const { data: userData, loading: loadingUser } = useQuery(GET_USER_INFO);
 	const { data: nodeData, error } = useQuery(GET_CONTENT_NODES);
 
 	const [nodes, setNodes] = useState<Node[]>();
+
+	const onDragEnd = (result: DropResult) => {
+		if (!result.destination || !nodes) return;
+
+		setNodes(reorder(nodes, result.source.index, result.destination.index));
+	};
 
 	useEffect(() => {
 		const edges = nodeData?.Admin.Tree.GetContentNodes.edges;
@@ -58,25 +85,67 @@ const Dashboard = () => {
 						</span>
 					</SkeletonLoader>
 				</h1>
-				<div className="flex-grow my-10 overflow-y-auto space-y-2">
-					{nodes?.length === 0 && (
-						<div className="w-full text-center text-sm">
-							There are no Nodes available!
-						</div>
-					)}
-					{nodes
-						? nodes.map((node) => (
-								<div
-									className="w-full h-20 p-3 flex flex-col justify-center bg-gray-300 rounded"
-									key={node.id}
-								>
-									{node.title}
-								</div>
-							))
-						: [0, 1, 2, 3, 5].map((i) => (
+				<DragDropContext onDragEnd={onDragEnd}>
+					<div className="flex-grow my-10 space-y-2">
+						{nodes?.length === 0 && (
+							<div className="w-full text-center text-sm">
+								There are no Nodes available!
+							</div>
+						)}
+						{nodes ? (
+							<Droppable
+								mode="virtual"
+								droppableId="column"
+								renderClone={(provided, snapshot, rubric) => (
+									<NodeItem
+										provided={provided}
+										isDragging={snapshot.isDragging}
+										item={nodes[rubric.source.index]}
+										index={rubric.source.index}
+										style={{}} // Style needs to be defined if required
+									/>
+								)}
+							>
+								{(droppableProvided, snapshot) => {
+									const itemCount = snapshot.isUsingPlaceholder
+										? nodes.length + 1
+										: nodes.length;
+
+									return (
+										<AutoSizer>
+											{({ height, width }) => (
+												<List
+													width={width}
+													height={height}
+													rowHeight={80}
+													rowCount={itemCount}
+													ref={(ref) => {
+														if (ref) {
+															const whatHasMyLifeComeTo =
+																ReactDOM.findDOMNode(ref);
+															if (whatHasMyLifeComeTo instanceof HTMLElement) {
+																droppableProvided.innerRef(
+																	whatHasMyLifeComeTo as HTMLElement
+																);
+															}
+														}
+													}}
+													rowRenderer={({ index, style }) =>
+														rowRenderer(nodes, index, style)
+													}
+												/>
+											)}
+										</AutoSizer>
+									);
+								}}
+							</Droppable>
+						) : (
+							[0, 1, 2, 3, 5].map((i) => (
 								<SkeletonLoader className="w-full h-20" key={i} isLoading />
-							))}
-				</div>
+							))
+						)}
+					</div>
+				</DragDropContext>
 			</div>
 		</div>
 	);
