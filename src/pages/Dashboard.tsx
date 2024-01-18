@@ -69,58 +69,67 @@ const Dashboard = () => {
 	};
 
 	const onDragEnd = (result: DropResult) => {
-		if (
-			!result.destination ||
-			!nodes ||
-			result.source.index === result.destination.index
-		) {
-			return;
+		try {
+			if (
+				!result.destination ||
+				!nodes ||
+				result.source.index === result.destination.index
+			) {
+				return;
+			}
+
+			const newNodes = reorder(
+				nodes,
+				result.source.index,
+				result.destination.index
+			);
+			setNodes(newNodes);
+
+			const newIndex = result.destination.index;
+			const movedItemId = newNodes[newIndex].id;
+
+			const newAction = {
+				movedItemId,
+				newIndex,
+			};
+
+			const updatedActions = [...reorderActions, newAction];
+			setReorderActions(updatedActions);
+			localStorage.setItem(REORDER_ACTIONS, JSON.stringify(updatedActions));
+		} catch (error) {
+			console.error(error);
 		}
-
-		const newNodes = reorder(
-			nodes,
-			result.source.index,
-			result.destination.index
-		);
-		setNodes(newNodes);
-
-		const newIndex = result.destination.index;
-		const movedItemId = newNodes[newIndex].id;
-
-		const newAction = {
-			movedItemId,
-			newIndex,
-		};
-
-		const updatedActions = [...reorderActions, newAction];
-		setReorderActions(updatedActions);
-		localStorage.setItem(REORDER_ACTIONS, JSON.stringify(updatedActions));
 	};
 
 	useEffect(() => {
-		const edges = nodeData?.Admin.Tree.GetContentNodes.edges;
-		if (edges) {
-			let newNodes = edges.flatMap((edge) =>
-				edge
-					? [
-							{
-								id: edge.node.id,
-								title: edge.node.structureDefinition.title,
-							},
-						]
-					: []
-			);
+		try {
+			const edges = nodeData?.Admin.Tree.GetContentNodes.edges;
+			if (edges) {
+				let newNodes = edges.flatMap((edge) =>
+					edge
+						? [
+								{
+									id: edge.node.id,
+									title: edge.node.structureDefinition.title,
+								},
+							]
+						: []
+				);
 
-			const storedActions = localStorage.getItem(REORDER_ACTIONS);
-			if (storedActions) {
-				const actions = JSON.parse(storedActions);
-				setReorderActions(actions);
-				newNodes = applyReorderActions(newNodes, actions);
+				const storedActions = localStorage.getItem(REORDER_ACTIONS);
+				if (storedActions) {
+					const actions = JSON.parse(storedActions);
+					setReorderActions(actions);
+					newNodes = applyReorderActions(newNodes, actions);
+				}
+
+				setNodes(newNodes);
+			} else {
+				setNodes(undefined);
 			}
-
-			setNodes(newNodes);
-		} else {
+		} catch (error) {
 			setNodes(undefined);
+			console.error(error);
 		}
 	}, [nodeData]);
 
