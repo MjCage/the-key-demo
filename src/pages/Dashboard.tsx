@@ -11,7 +11,7 @@ interface Node {
 
 const Dashboard = () => {
 	const { data: userData, loading: loadingUser } = useQuery(GET_USER_INFO);
-	const { data: nodeData } = useQuery(GET_CONTENT_NODES);
+	const { data: nodeData, error } = useQuery(GET_CONTENT_NODES);
 
 	const [nodes, setNodes] = useState<Node[]>();
 
@@ -35,7 +35,13 @@ const Dashboard = () => {
 		}
 	}, [nodeData]);
 
-	// ToDo: Define error case
+	if (error) {
+		return (
+			<div className="w-full h-screen flex items-center justify-center text-lg">
+				Ups, irgendetwas ist schief gelaufen.
+			</div>
+		);
+	}
 
 	return (
 		<div className="w-full h-screen overflow-hidden">
