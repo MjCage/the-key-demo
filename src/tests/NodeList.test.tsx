@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, waitFor } from "../test-utils";
-import { NodeList } from "../../components/NodeList";
-import { GET_CONTENT_NODES } from "../../utils/schemas";
+import { render, screen, waitFor } from "./test-utils";
+import { NodeList } from "../components/NodeList";
+import { GET_CONTENT_NODES } from "../utils/schemas";
 import { GraphQLError } from "graphql";
 
 interface NodeEntry {

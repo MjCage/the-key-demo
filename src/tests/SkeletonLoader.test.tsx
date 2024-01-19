@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen } from "../test-utils";
-import { SkeletonLoader } from "../../components/SkeletonLoader";
+import { render, screen } from "./test-utils";
+import { SkeletonLoader } from "../components/SkeletonLoader";
 
 test("hides children when is loading is set", () => {
 	render(

@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, waitFor } from "../test-utils";
+import { render, screen, waitFor } from "./test-utils";
 import userEvent from "@testing-library/user-event";
-import { LoginForm } from "../../components/LoginForm";
+import { LoginForm } from "../components/LoginForm";
 
 test("on initial render, login is disabled", () => {
 	render(<LoginForm />);
