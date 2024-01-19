@@ -3,7 +3,7 @@
 import { useQuery } from "@apollo/client";
 import ReactDOM from "react-dom";
 import React, { useEffect, useState } from "react";
-import { GET_CONTENT_NODES, GET_USER_INFO } from "../utils/schemas";
+import { GET_CONTENT_NODES } from "../utils/schemas";
 import { Navbar } from "../components/Navbar";
 import { SkeletonLoader } from "../components/SkeletonLoader";
 import { AutoSizer, List } from "react-virtualized";
@@ -12,6 +12,7 @@ import { NodeRow } from "../components/NodeRow";
 import { NodeItem } from "../components/NodeItem";
 import { Node } from "../utils/types";
 import { REORDER_ACTIONS } from "../utils/contants";
+import { WelcomeTitle } from "../components/WelcomeTitle";
 
 interface Action {
 	movedItemId: string;
@@ -40,7 +41,6 @@ const rowRenderer = (
 	) : null;
 
 const Dashboard = () => {
-	const { data: userData, loading: loadingUser } = useQuery(GET_USER_INFO);
 	const { data: nodeData, error } = useQuery(GET_CONTENT_NODES);
 
 	const [nodes, setNodes] = useState<Node[]>();
@@ -145,17 +145,7 @@ const Dashboard = () => {
 		<div className="w-full h-screen overflow-hidden">
 			<Navbar />
 			<div className="h-full flex flex-col py-10 lg:pb-20 px-3 max-w-5xl mx-auto">
-				<h1 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 md:text-left">
-					Willkommen{" "}
-					<SkeletonLoader
-						isLoading={loadingUser}
-						className="h-[26px] w-40 inline-block"
-					>
-						<span className="font-thin">
-							{userData?.Viewer?.Auth?.currentUser?.user?.name ?? "User"}!
-						</span>
-					</SkeletonLoader>
-				</h1>
+				<WelcomeTitle />
 				<DragDropContext onDragEnd={onDragEnd}>
 					<div className="flex-grow my-10 space-y-2">
 						{nodes?.length === 0 && (
