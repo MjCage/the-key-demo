@@ -14,9 +14,11 @@ type Inputs = {
 
 const schema = object({
 	email: string()
-		.required("Email is required to login.")
-		.email("Invalid email address."),
-	password: string().required("Password is required to authenticate."),
+		.required("E-Mail wird für Login benötigt.")
+		.email("Ungültige E-Mail Adresse."),
+	password: string().required(
+		"Passwort wird für die Authentifizierung benötigt."
+	),
 }).required();
 
 interface LoginFormProps {
