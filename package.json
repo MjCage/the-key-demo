@@ -8,7 +8,7 @@
 		"build": "react-scripts build",
 		"test:unit": "react-scripts test --watchAll=false",
 		"test:e2e": "BROWSER=none start-server-and-test start 3000 \"cypress run\"",
-		"test": "test:unit && test:e2e",
+		"test": "pnpm test:unit && pnpm test:e2e",
 		"eject": "react-scripts eject",
 		"lint": "eslint . --ext .ts,.tsx",
 		"format": "prettier --write .",
