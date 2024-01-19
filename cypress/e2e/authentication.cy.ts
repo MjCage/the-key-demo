@@ -1,28 +1,33 @@
 /// <reference types="cypress" />
 
+import { AUTH_TOKEN } from "../../src/utils/contants";
+
 describe("authentication", () => {
 	beforeEach(() => {
-		// Cypress starts out with a blank slate for each test
-		// so we must tell it to visit our website with the `cy.visit()` command.
-		// Since we want to visit the same URL at the start of all our tests,
-		// we include it in our beforeEach function so that it runs before each test
 		cy.visit("http://localhost:3000");
 	});
 
 	it("gets rejected for wrong credentials", () => {
-		// types wrong email
-		// types wrong pw
-		// clicks button
-		// error message appears
+		cy.get("#email").type("wrongemail@example.com");
+		cy.get('input[type="password"]').type("wrongpassword");
+		cy.contains("button", "Einloggen").click();
+		cy.contains("E-Mail und/oder Passwort falsch.").should("be.visible");
 	});
 
 	it("can authenticate correctly and logout after", () => {
-		// types correct email
-		// types correct pw
-		// clicks button
-		// user is set in ls
-		// refresh
-		// user is still set and stays logged in
-		// logout
+		cy.get("#email").type(Cypress.env("correct_email"));
+		cy.get('input[type="password"]').type(Cypress.env("correct_password"));
+		cy.contains("button", "Einloggen").click();
+
+		cy.window().its(`localStorage.${AUTH_TOKEN}`).should("exist");
+		cy.get(".authenticated-ui").should("be.visible");
+
+		cy.reload();
+
+		cy.window().its(`localStorage.${AUTH_TOKEN}`).should("exist");
+		cy.get(".authenticated-ui").should("be.visible");
+
+		cy.contains("button", "Ausloggen").click();
+		cy.window().its(`localStorage.${AUTH_TOKEN}`).should("not.exist");
 	});
 });
