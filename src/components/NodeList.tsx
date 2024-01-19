@@ -133,7 +133,7 @@ export const NodeList = () => {
 
 	if (error) {
 		return (
-			<div className="w-full h-screen flex items-center justify-center text-lg">
+			<div className="w-full h-full flex items-center justify-center text-lg">
 				Ups, irgendetwas ist schief gelaufen.
 			</div>
 		);
@@ -144,7 +144,7 @@ export const NodeList = () => {
 			<div className="flex-grow my-10 space-y-2">
 				{nodes?.length === 0 && (
 					<div className="w-full text-center text-sm">
-						There are no Nodes available!
+						Es sind keine Nodes verfügbar!
 					</div>
 				)}
 				{nodes ? (
