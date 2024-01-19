@@ -13,7 +13,10 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
 }) => {
 	if (isLoading) {
 		return (
-			<div className={`bg-gray-300 rounded animate-pulse ${className ?? ""}`} />
+			<div
+				data-testid="skeleton-loader"
+				className={`bg-gray-300 rounded animate-pulse ${className ?? ""}`}
+			/>
 		);
 	}
 

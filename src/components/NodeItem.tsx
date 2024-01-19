@@ -14,7 +14,7 @@ const NodeItemComponent = memo(
 	({ item, style, provided, isDragging }: NodeItemProps) => (
 		<div
 			data-index={item.id}
-			data-testid={item.id}
+			data-testid="node-item"
 			ref={provided.innerRef}
 			{...provided.draggableProps}
 			{...provided.dragHandleProps}
