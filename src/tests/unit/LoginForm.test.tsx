@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import React from "react";
 import { render, screen, waitFor } from "../test-utils";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "../../components/LoginForm";

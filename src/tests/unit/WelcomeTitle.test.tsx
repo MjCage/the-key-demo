@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import React from "react";
 import { render, screen, waitFor } from "../test-utils";
 import { WelcomeTitle } from "../../components/WelcomeTitle";
 import { GET_USER_INFO } from "../../utils/schemas";

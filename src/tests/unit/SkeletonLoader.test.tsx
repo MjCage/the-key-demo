@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import React from "react";
 import { render, screen } from "../test-utils";
 import { SkeletonLoader } from "../../components/SkeletonLoader";
 
