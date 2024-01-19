@@ -20,7 +20,7 @@ export const WelcomeTitle = ({ className }: WelcomeTitleProps) => {
 				className="h-[26px] w-40 inline-block"
 			>
 				<span className="font-thin">
-					{userData?.Viewer?.Auth?.currentUser?.user?.name ?? "User"}!
+					{userData?.Viewer?.Auth?.currentUser?.user?.name ?? "Nutzer"}!
 				</span>
 			</SkeletonLoader>
 		</h1>
