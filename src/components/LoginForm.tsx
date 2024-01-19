@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "./Button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -36,6 +36,8 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 		mode: "onTouched",
 	});
 
+	const [loginFailed, setLoginFailed] = useState(false);
+
 	const [loginUser, { loading }] = useMutation(LOGIN_USER, {
 		update(_, { data }) {
 			const accessToken =
@@ -45,12 +47,13 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 				login(accessToken);
 			}
 		},
-		onError(error) {
-			console.error(error);
+		onError() {
+			setLoginFailed(true);
 		},
 	});
 
 	const onSubmit = (inputs: Inputs) => {
+		setLoginFailed(false);
 		loginUser({
 			variables: {
 				input: {
@@ -93,7 +96,8 @@ export const LoginForm = ({ className }: LoginFormProps) => {
 				{...register("password", { required: true })}
 			/>
 			<p className="text-red-500 text-xs mb-8 h-2">
-				{errors.password?.message}
+				{errors.password?.message ||
+					(loginFailed ? "E-Mail und/oder Passwort falsch." : undefined)}
 			</p>
 			<Button
 				type="submit"
